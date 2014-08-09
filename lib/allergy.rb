@@ -36,4 +36,8 @@ class Allergy
     DB.exec("UPDATE allergies SET name = '#{new_name}' WHERE id = #{@id};")
     @name = new_name
   end
+
+  def count
+    DB.exec("SELECT COUNT(id) FROM people_allergies WHERE allergy_id = #{@id};").first['count'].to_i
+  end
 end
