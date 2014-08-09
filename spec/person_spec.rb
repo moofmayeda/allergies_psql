@@ -94,4 +94,15 @@ describe "Person" do
       expect(test_person.allergies).to eq [test_allergy]
     end
   end
+
+  describe "preference" do
+    it "returns the person's preference" do
+      test_preference = Preference.new({'name' => 'vegetarian'})
+      test_preference.save
+      preference_id = test_preference.id
+      test_person = Person.new({'name' => 'moof', 'preference_id' => preference_id})
+      test_person.save
+      expect(test_person.preference).to eq 'vegetarian'
+    end
+  end
 end

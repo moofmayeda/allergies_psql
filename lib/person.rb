@@ -55,4 +55,8 @@ class Person
     end
     allergies
   end
+
+  def preference
+    DB.exec("SELECT preferences.name FROM people JOIN preferences ON (preference_id = preferences.id) WHERE people.id = #{@id};").first['name']
+  end
 end
