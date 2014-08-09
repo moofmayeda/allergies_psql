@@ -21,6 +21,15 @@ class Person
     Person.new(DB.exec("SELECT * FROM people WHERE name = '#{name}';").first)
   end
 
+  def self.search_by_preference(id)
+    people = []
+    results = DB.exec("SELECT people.* FROM people JOIN preferences ON (preference_id = preferences.id) WHERE preference_id = #{id};")
+    results.each do |result|
+      people << Person.new(result)
+    end
+    people
+  end
+
   def save
     @id = DB.exec("INSERT INTO people (name, preference_id) VALUES ('#{@name}', #{@preference_id}) RETURNING id;").first['id'].to_i
   end

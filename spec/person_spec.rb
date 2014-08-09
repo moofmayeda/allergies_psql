@@ -118,4 +118,15 @@ describe "Person" do
       expect(test_person.preference).to eq 'vegetarian'
     end
   end
+
+  describe "search_by_preference" do
+    it "returns all guests with a particular preference given an ID" do
+      test_preference = Preference.new({'name' => 'vegetarian'})
+      test_preference.save
+      preference_id = test_preference.id
+      test_person = Person.new({'name' => 'moof', 'preference_id' => preference_id})
+      test_person.save
+      expect(Person.search_by_preference(preference_id)).to eq [test_person]
+    end
+  end
 end
