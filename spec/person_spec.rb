@@ -83,6 +83,19 @@ describe "Person" do
     end
   end
 
+  describe "remove_allergy" do
+    it "removes an allergy from a person given the allergy id" do
+      test_person = Person.new({'name' => 'moof', 'preference_id' => 2})
+      test_person.save
+      test_allergy = Allergy.new({'name' => 'peanuts'})
+      test_allergy.save
+      id = test_allergy.id
+      test_person.add_allergy(id)
+      test_person.remove_allergy(id)
+      expect(test_person.allergies).to eq []
+    end
+  end
+
   describe "allergies" do
     it "lists all allergies that a person has" do
       test_person = Person.new({'name' => 'moof', 'preference_id' => 2})

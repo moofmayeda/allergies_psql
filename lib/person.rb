@@ -47,6 +47,10 @@ class Person
     DB.exec("INSERT INTO people_allergies (person_id, allergy_id) VALUES (#{@id}, #{allergy_id});")
   end
 
+  def remove_allergy(allergy_id)
+    DB.exec("DELETE FROM people_allergies WHERE person_id = #{@id} AND allergy_id = #{allergy_id};")
+  end
+
   def allergies
     allergies = []
     results = DB.exec("SELECT allergies.* FROM people JOIN people_allergies ON (people.id = person_id) JOIN allergies ON (allergy_id = allergies.id) WHERE people.id = #{@id};")
