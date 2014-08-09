@@ -36,4 +36,13 @@ class Preference
     DB.exec("UPDATE preferences SET name = '#{new_name}' WHERE id = #{@id};")
     @name = new_name
   end
+
+  def allergies
+    allergies = []
+    results = DB.exec("SELECT allergies.* FROM people JOIN people_allergies ON (people.id = person_id) JOIN allergies ON (allergy_id = allergies.id) WHERE people.preference_id = #{@id};")
+    results.each do |result|
+      allergies << Allergy.new(result)
+    end
+    allergies
+  end
 end

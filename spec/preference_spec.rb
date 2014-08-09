@@ -62,4 +62,19 @@ describe "Preference" do
       expect(Preference.find(id)).to eq test_preference
     end
   end
+
+  describe "allergies" do
+    it "lists all allergies that people with that preference have" do
+      test_preference = Preference.new({'name' => 'vegetarian'})
+      test_preference.save
+      preference_id = test_preference.id
+      test_person = Person.new({'name' => 'moof', 'preference_id' => preference_id})
+      test_person.save
+      test_allergy = Allergy.new({'name' => 'peanuts'})
+      test_allergy.save
+      allergy_id = test_allergy.id
+      test_person.add_allergy(allergy_id)
+      expect(test_preference.allergies).to eq [test_allergy]
+    end
+  end
 end
