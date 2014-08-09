@@ -64,7 +64,7 @@ describe "Person" do
   end
 
   describe ".find" do
-    it "finds a person given their exact name" do
+    it "finds a person given their unique name" do
       test_person = Person.new({'name' => 'moof', 'preference_id' => 2})
       test_person.save
       expect(Person.find('moof')).to eq test_person
