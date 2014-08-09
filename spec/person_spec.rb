@@ -35,4 +35,39 @@ describe "Person" do
       expect(test_person).to eq test_person2
     end
   end
+
+  describe "delete" do
+    it "deletes a person from the database" do
+      test_person = Person.new({'name' => 'moof', 'preference_id' => 2})
+      test_person.save
+      test_person.delete
+      expect(Person.all).to eq []
+    end
+  end
+
+  describe "edit_name" do
+    it "edits a person's name in the database" do
+      test_person = Person.new({'name' => 'moof', 'preference_id' => 2})
+      test_person.save
+      test_person.edit_name("moofin")
+      expect(test_person.name).to eq "moofin"
+    end
+  end
+
+  describe "edit_preference" do
+    it "edits a person's preference in the database" do
+      test_person = Person.new({'name' => 'moof', 'preference_id' => 2})
+      test_person.save
+      test_person.edit_preference(1)
+      expect(test_person.preference_id).to eq 1
+    end
+  end
+
+  describe ".find" do
+    it "finds a person given their exact name" do
+      test_person = Person.new({'name' => 'moof', 'preference_id' => 2})
+      test_person.save
+      expect(Person.find('moof')).to eq test_person
+    end
+  end
 end
