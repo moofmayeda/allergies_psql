@@ -17,7 +17,7 @@ describe "Allergy" do
   end
 
   describe ".all" do
-    it "returns all allergys in an array" do
+    it "returns all allergies in an array" do
       test_allergy = Allergy.new({'name' => 'peanuts'})
       test_allergy.save
       test_allergy2 = Allergy.new({'name' => 'strawberries'})
@@ -27,7 +27,7 @@ describe "Allergy" do
   end
 
   describe "==" do
-    it "sets two allergys as equal if their names are equal" do
+    it "sets two allergies as equal if their names are equal" do
       test_allergy = Allergy.new({'name' => 'peanuts'})
       test_allergy.save
       test_allergy2 = Allergy.new({'name' => 'peanuts'})

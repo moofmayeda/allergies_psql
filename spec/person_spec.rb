@@ -70,4 +70,28 @@ describe "Person" do
       expect(Person.find('moof')).to eq test_person
     end
   end
+
+  describe "add_allergy" do
+    it "adds an allergy to a person given the allergy id" do
+      test_person = Person.new({'name' => 'moof', 'preference_id' => 2})
+      test_person.save
+      test_allergy = Allergy.new({'name' => 'peanuts'})
+      test_allergy.save
+      id = test_allergy.id
+      test_person.add_allergy(id)
+      expect(test_person.allergies).to eq [test_allergy]
+    end
+  end
+
+  describe "allergies" do
+    it "lists all allergies that a person has" do
+      test_person = Person.new({'name' => 'moof', 'preference_id' => 2})
+      test_person.save
+      test_allergy = Allergy.new({'name' => 'peanuts'})
+      test_allergy.save
+      id = test_allergy.id
+      test_person.add_allergy(id)
+      expect(test_person.allergies).to eq [test_allergy]
+    end
+  end
 end

@@ -42,4 +42,17 @@ class Person
     DB.exec("UPDATE people SET preference_id = #{new_pref_id} WHERE id = #{@id};")
     @preference_id = new_pref_id
   end
+
+  def add_allergy(allergy_id)
+    DB.exec("INSERT INTO people_allergies (person_id, allergy_id) VALUES (#{@id}, #{allergy_id});")
+  end
+
+  def allergies
+    allergies = []
+    results = DB.exec("SELECT allergies.* FROM people JOIN people_allergies ON (people.id = person_id) JOIN allergies ON (allergy_id = allergies.id) WHERE people.id = #{@id};")
+    results.each do |result|
+      allergies << Allergy.new(result)
+    end
+    allergies
+  end
 end
