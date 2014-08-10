@@ -14,6 +14,7 @@ def header
 end
 
 def main_menu
+  header
   puts "1) View/add Guests"
   puts "2) Add/edit Allergies"
   puts "3) Add/edit Preferences"
@@ -271,13 +272,44 @@ def reports_menu
   puts "5) Return to main menu"
   case gets.chomp.to_i
   when 1
+    Preference.all.each do |preference|
+      puts preference.name + " - " + preference.count.to_s
+    end
   when 2
+    Preference.all.each do |preference|
+      print preference.name + " - "
+      names = preference.allergies.map { |allergy| allergy.name }
+      puts names.uniq.join(", ")
+    end
   when 3
+    view_preferences
+    puts "Enter the preference number"
+    results = Person.search_by_preference(gets.chomp.to_i)
+    results.each do |person|
+      puts person.name
+      print "ALLERGIES:"
+      person.allergies.each do |allergy|
+        print " " + allergy.name
+      end
+      puts
+    end
+    puts
   when 4
+    view_allergies
+    puts "Enter the allergy number"
+    results = Person.search_by_allergy(gets.chomp.to_i)
+    results.each do |person|
+      puts person.name
+      print "PREFERENCE: " + person.preference + "\n"
+    end
+    puts
   when 5
+    main_menu
   else
     puts "Enter a valid option"
   end
+  puts "Hit enter to return to the reports menu"
+  gets.chomp
   reports_menu
 end
 
