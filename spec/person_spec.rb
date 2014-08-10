@@ -129,4 +129,16 @@ describe "Person" do
       expect(Person.search_by_preference(preference_id)).to eq [test_person]
     end
   end
+
+  describe "search_by_allergy" do
+    it "returns all guests with a particular allergy given an ID" do
+      test_allergy = Allergy.new({'name' => 'peanuts'})
+      test_allergy.save
+      allergy_id = test_allergy.id
+      test_person = Person.new({'name' => 'moof', 'preference_id' => 2})
+      test_person.save
+      test_person.add_allergy(allergy_id)
+      expect(Person.search_by_allergy(allergy_id)).to eq [test_person]
+    end
+  end
 end

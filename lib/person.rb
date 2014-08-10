@@ -30,6 +30,15 @@ class Person
     people
   end
 
+  def self.search_by_allergy(id)
+    people = []
+    results = DB.exec("SELECT people.* FROM people JOIN people_allergies ON (people.id = person_id) WHERE allergy_id = #{id};")
+    results.each do |result|
+      people << Person.new(result)
+    end
+    people
+  end
+
   def save
     @id = DB.exec("INSERT INTO people (name, preference_id) VALUES ('#{@name}', #{@preference_id}) RETURNING id;").first['id'].to_i
   end
