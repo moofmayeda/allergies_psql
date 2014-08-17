@@ -1,5 +1,6 @@
 class Preference < ActiveRecord::Base
   has_many :people
+  has_many :allergies, :through => :people
 
   validates :name, :presence => true, :uniqueness => true
 

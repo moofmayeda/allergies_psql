@@ -11,4 +11,6 @@ describe Preference do
     preference = Preference.create(:name => "vegetarian")
     expect(preference.name).to eq "VEGETARIAN"
   end
+
+  it { should have_many :allergies }
 end
