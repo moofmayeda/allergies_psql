@@ -131,13 +131,9 @@ def edit_remove_allergies(allergy)
   puts "2) Delete allergy"
   puts "3) Return to the allergies menu"
   case gets.chomp.to_i
-  when 1
-    puts "Enter the new allergy name"
-    allergy.update(name: gets.chomp.upcase)
-  when 2
-    allergy.delete
-  when 3
-    allergies_menu
+  when 1 then edit_allergy(allergy)
+  when 2 then allergy.destroy
+  when 3 then allergies_menu
   else
     puts "Enter a valid option"
   end
@@ -146,7 +142,22 @@ end
 
 def new_allergy
   puts "Enter the new allergy"
-  Allergy.new('name' => gets.chomp.upcase).save
+  allergy = Allergy.new(name: gets.chomp)
+  validate_new(allergy)
+end
+
+def edit_allergy(allergy)
+  puts "Enter the new allergy name"
+  if allergy.update(name: gets.chomp.upcase)
+  else
+    puts "That wasn't a valid entry:"
+    allergy.errors.full_messages.each {|message| puts message}
+    puts "Try again? y/n"
+    case gets.chomp.downcase
+    when 'y' then edit_allergy(allergy)
+    when 'n' then allergies_menu
+    end
+  end
 end
 
 def view_allergies
