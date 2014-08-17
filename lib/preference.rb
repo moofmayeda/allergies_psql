@@ -1,7 +1,13 @@
 class Preference < ActiveRecord::Base
   has_many :people
 
-  # def count
-  #   DB.exec("SELECT COUNT(id) FROM people WHERE preference_id = #{@id};").first['count'].to_i
-  # end
+  validates :name, :presence => true, :uniqueness => true
+
+  before_save :upcase_name
+
+private
+
+  def upcase_name
+    self.name = self.name.upcase
+  end
 end
