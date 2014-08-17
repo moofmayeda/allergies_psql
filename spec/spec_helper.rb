@@ -1,16 +1,17 @@
-require 'pg'
-require 'rspec'
-require 'person'
-require 'allergy'
-require 'preference'
+require 'bundler/setup'
+Bundler.require(:default, :test)
 
-DB = PG.connect({:dbname => 'allergies_test'})
+Dir[File.dirname(__FILE__) + '/../lib/*.rb'].each { |file| require file }
+
+database_configurations = YAML::load(File.open('./db/config.yml'))
+test_configuration = database_configurations['test']
+ActiveRecord::Base.establish_connection(test_configuration)
 
 RSpec.configure do |config|
   config.before(:each) do
-    DB.exec("DELETE FROM people *;")
-    DB.exec("DELETE FROM allergies *;")
-    DB.exec("DELETE FROM preferences *;")
-    DB.exec("DELETE FROM people_allergies *;")
+    Allergy.all.each { |allergy| allergy.destroy }
+    Person.all.each { |person| person.destroy }
+    Preference.all.each { |preference| preference.destroy }
   end
 end
+

@@ -1,10 +1,10 @@
-require 'pg'
-require 'rspec'
-require './lib/person'
-require './lib/allergy'
-require './lib/preference'
+Dir[File.dirname(__FILE__) + '/lib/*.rb'].each { |file| require file }
 
-DB = PG.connect({:dbname => 'allergies'})
+
+database_configurations = YAML::load(File.open('./db/config.yml'))
+development_configuration = database_configurations['development']
+ActiveRecord::Base.establish_connection(development_configuration)
+
 
 def header
   system('clear')
