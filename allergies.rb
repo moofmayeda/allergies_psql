@@ -332,23 +332,19 @@ def reports_menu
   when 3
     view_preferences
     puts "Enter the preference number"
-    results = Person.search_by_preference(gets.chomp.to_i)
-    results.each do |person|
+    Preference.find(gets.chomp.to_i).people.each do |person|
       puts person.name
       print "ALLERGIES:"
-      person.allergies.each do |allergy|
-        print " " + allergy.name
-      end
+      person.allergies.each { |allergy| print " " + allergy.name}
       puts
     end
     puts
   when 4
     view_allergies
     puts "Enter the allergy number"
-    results = Person.search_by_allergy(gets.chomp.to_i)
-    results.each do |person|
+    Allergy.find(gets.chomp.to_i).people.each do |person|
       puts person.name
-      print "PREFERENCE: " + person.preference + "\n"
+      print "PREFERENCE: " + person.preference.name + "\n"
     end
     puts
   when 5
