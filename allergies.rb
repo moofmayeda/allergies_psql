@@ -283,6 +283,11 @@ def add_guest
       new_person = Person.new({'name' => name, 'preference_id' => preference_input.to_i})
       validate_new(new_person)
       new_person.allergies << Allergy.find(allergy_input.to_i) if allergy_input.to_i > 0
+      puts "Enter another guest? y/n"
+      case gets.chomp.downcase
+      when 'y' then add_guest
+      when 'n' then guests_menu
+      end
     end
   end
 end
@@ -316,7 +321,7 @@ def reports_menu
   case gets.chomp.to_i
   when 1
     Preference.all.each do |preference|
-      puts preference.name + " - " + preference.count.to_s
+      puts preference.name + " - " + preference.people.count.to_s
     end
   when 2
     Preference.all.each do |preference|
