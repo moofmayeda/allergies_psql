@@ -11,4 +11,9 @@ describe Allergy do
     allergy = Allergy.create(:name => "peanuts")
     expect(allergy.name).to eq "PEANUTS"
   end
+
+  it 'returns false if an update is invalid' do
+    allergy = Allergy.create(:name => "peanuts")
+    expect(allergy.update(:name => "")).to eq false
+  end
 end

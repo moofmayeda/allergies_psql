@@ -1,5 +1,7 @@
-Dir[File.dirname(__FILE__) + '/lib/*.rb'].each { |file| require file }
+require 'bundler/setup'
+Bundler.require(:default)
 
+Dir[File.dirname(__FILE__) + '/lib/*.rb'].each { |file| require file }
 
 database_configurations = YAML::load(File.open('./db/config.yml'))
 development_configuration = database_configurations['development']
@@ -61,13 +63,9 @@ def edit_remove_preference(preference)
   puts "2) Delete preference"
   puts "3) Return to the preferences menu"
   case gets.chomp.to_i
-  when 1
-    puts "Enter the new preference name"
-    preference.edit_name(gets.chomp.upcase)
-  when 2
-    preference.delete
-  when 3
-    preferences_menu
+  when 1 then edit_preference(preference)
+  when 2 then preference.destroy
+  when 3 then preferences_menu
   else
     puts "Enter a valid option"
   end
@@ -76,13 +74,37 @@ end
 
 def new_preference
   puts "Enter the new preference"
-  Preference.new('name' => gets.chomp.upcase).save
+  preference = Preference.new(name: gets.chomp.upcase)
+  validate_new(preference)
+end
+
+def validate_new(new_object)
+  if new_object.save
+    puts "#{new_object.class} created!"
+  else
+    puts "That wasn't a valid entry:"
+    new_object.errors.full_messages.each {|message| puts message}
+  end
 end
 
 def view_preferences
   puts "PREFERENCES:"
   Preference.all.each do |preference|
     puts preference.id.to_s + ") " + preference.name.to_s
+  end
+end
+
+def edit_preference(preference)
+  puts "Enter the new preference name"
+  if preference.update(name: gets.chomp.upcase)
+  else
+    puts "That wasn't a valid entry:"
+    preference.errors.full_messages.each {|message| puts message}
+    puts "Try again? y/n"
+    case gets.chomp.downcase
+    when 'y' then edit_preference(preference)
+    when 'n' then preferences_menu
+    end
   end
 end
 
@@ -111,7 +133,7 @@ def edit_remove_allergies(allergy)
   case gets.chomp.to_i
   when 1
     puts "Enter the new allergy name"
-    allergy.edit_name(gets.chomp.upcase)
+    allergy.update(name: gets.chomp.upcase)
   when 2
     allergy.delete
   when 3
