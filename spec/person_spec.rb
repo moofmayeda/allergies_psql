@@ -11,4 +11,13 @@ describe Person do
     person = Person.create(:name => "joe")
     expect(person.name).to eq "JOE"
   end
+
+  describe "rsvp" do
+    it "returns only those people who have rsvp'd" do
+      test_person_1 = Person.create(name: "moof", preference_id: 1)
+      test_person_2 = Person.create(name: "ali", preference_id: 2)
+      test_person_1.update(rsvp: true)
+      expect(Person.rsvp).to eq [test_person_1]
+    end
+  end
 end

@@ -170,14 +170,16 @@ end
 def guests_menu
   header
   puts "1) Add a new guest"
-  puts "2) Search for a guest to view, edit, or remove"
+  puts "2) Search for a guest to view, edit, RSVP, or remove"
   puts "3) Display list of all guests"
-  puts "4) Return to main menu"
+  puts "4) Display list of guests who have RSVP'd"
+  puts "5) Return to main menu"
   case gets.chomp.to_i
   when 1 then add_guest
   when 2 then search_guest
   when 3 then view_guests
-  when 4 then main_menu
+  when 4 then view_guests_rsvp
+  when 5 then main_menu
   else
     puts "Enter a valid option"
   end
@@ -204,16 +206,18 @@ def guest_menu(guest)
   puts "1) Edit guest's name"
   puts "2) Edit guest's preference"
   puts "3) Edit guest's allergies"
-  puts "4) Remove guest"
-  puts "5) Return to guests menu"
+  puts "4) Mark guest as RSVP'd"
+  puts "5) Remove guest"
+  puts "6) Return to guests menu"
   case gets.chomp.to_i
   when 1 then edit_person_name(guest)
   when 2 then edit_person_preference(guest)
   when 3 then add_remove_allergies(guest)
-  when 4
+  when 4 then guest.update(rsvp: true)
+  when 5
     guest.destroy
     guests_menu
-  when 5
+  when 6
     guests_menu
   else
     puts "Enter a valid option"
@@ -310,6 +314,24 @@ def view_guests
   end
 end
 
+def view_guests_rsvp
+  header
+  puts "GUESTS:"
+  Person.rsvp.each do |person|
+    puts person.name
+  end
+  puts "1) Return to guests menu"
+  puts "2) Return to main menu"
+  case gets.chomp.to_i
+  when 1
+    guests_menu
+  when 2
+    main_menu
+  else
+    puts "Enter a valid option"
+  end
+end
+
 def reports_menu
   header
   summary
@@ -358,7 +380,7 @@ def reports_menu
 end
 
 def summary
-  puts "GUESTS: " + Person.all.length.to_s
+  puts "GUESTS: " + Person.count.to_s
   print "ALLERGENS:"
   Allergy.all.each do |allergy|
     print " " + allergy.name

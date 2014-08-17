@@ -4,6 +4,8 @@ class Person < ActiveRecord::Base
 
   validates :name, :presence => true
 
+  scope :rsvp, -> { where(rsvp: true) }
+
   before_save :upcase_name
 
 private
