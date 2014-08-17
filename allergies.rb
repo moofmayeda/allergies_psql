@@ -174,14 +174,10 @@ def guests_menu
   puts "3) Display list of all guests"
   puts "4) Return to main menu"
   case gets.chomp.to_i
-  when 1
-    add_guest
-  when 2
-    search_guest
-  when 3
-    view_guests
-  when 4
-    main_menu
+  when 1 then add_guest
+  when 2 then search_guest
+  when 3 then view_guests
+  when 4 then main_menu
   else
     puts "Enter a valid option"
   end
@@ -190,7 +186,7 @@ end
 
 def view_guest(guest)
   puts "NAME: " + guest.name
-  puts "PREFERENCE: " + guest.preference
+  puts "PREFERENCE: " + guest.preference.name
   puts "ALLERGIES:"
   guest.allergies.each do |allergy|
     puts "\t" + allergy.name
@@ -199,7 +195,7 @@ end
 
 def search_guest
   puts "Enter the name of the guest"
-  guest = Person.find(gets.chomp.upcase)
+  guest = Person.find_by(name: gets.chomp.upcase)
   guest_menu(guest)
 end
 
@@ -211,17 +207,11 @@ def guest_menu(guest)
   puts "4) Remove guest"
   puts "5) Return to guests menu"
   case gets.chomp.to_i
-  when 1
-    puts "Enter the new name"
-    guest.edit_name(gets.chomp.upcase)
-  when 2
-    view_preferences
-    puts "Enter new preference number"
-    guest.edit_preference(gets.chomp.to_i)
-  when 3
-    add_remove_allergies(guest)
+  when 1 then edit_person_name(guest)
+  when 2 then edit_person_preference(guest)
+  when 3 then add_remove_allergies(guest)
   when 4
-    guest.delete
+    guest.destroy
     guests_menu
   when 5
     guests_menu
@@ -229,6 +219,26 @@ def guest_menu(guest)
     puts "Enter a valid option"
   end
   guest_menu(guest)
+end
+
+def edit_person_name(guest)
+  puts "Enter the new guest name"
+  if guest.update(name: gets.chomp.upcase)
+  else
+    puts "That wasn't a valid entry:"
+    guest.errors.full_messages.each {|message| puts message}
+    puts "Try again? y/n"
+    case gets.chomp.downcase
+    when 'y' then edit_person_name(guest)
+    when 'n' then preferences_menu
+    end
+  end
+end
+
+def edit_person_preference(guest)
+  view_preferences
+  puts "Enter new preference number"
+  guest.update(preference_id: gets.chomp.to_i)
 end
 
 def add_remove_allergies(guest)
@@ -239,11 +249,11 @@ def add_remove_allergies(guest)
   when 1
     view_allergies
     puts "Enter new allergy number"
-    guest.add_allergy(gets.chomp.to_i)
+    guest.allergies << Allergy.find(gets.chomp.to_i)
   when 2
     view_allergies
     puts "Enter the allergy number to remove"
-    guest.remove_allergy(gets.chomp.to_i)
+    guest.allergies.delete(Allergy.find(gets.chomp.to_i))
   when 3
     guest_menu
   else
@@ -255,7 +265,7 @@ end
 def add_guest
   header
   puts "Enter the name of the guest"
-  name = gets.chomp.upcase
+  name = gets.chomp
   view_preferences
   puts "Enter the preference number or 'n' to create a new preference"
   preference_input = gets.chomp
@@ -271,8 +281,8 @@ def add_guest
       add_guest
     else
       new_person = Person.new({'name' => name, 'preference_id' => preference_input.to_i})
-      new_person.save
-      new_person.add_allergy(allergy_input.to_i)
+      validate_new(new_person)
+      new_person.allergies << Allergy.find(allergy_input.to_i) if allergy_input.to_i > 0
     end
   end
 end
